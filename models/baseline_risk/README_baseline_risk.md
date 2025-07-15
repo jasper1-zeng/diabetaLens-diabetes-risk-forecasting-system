@@ -1,0 +1,1 @@
+**Data Reference**: [Australian Bureau of Statistics - Diabetes 2022](https://www.abs.gov.au/statistics/health/health-conditions-and-risks/diabetes/latest-release)
