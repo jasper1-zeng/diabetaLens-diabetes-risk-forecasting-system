@@ -13,61 +13,70 @@
 
 ---
 
-## 🧠 System Workflow TBC
+## 🧠 System Workflow
 
+### 📊 Risk Calculator Pipeline
+
+```mermaid
+flowchart TD
+    A[👤 User Input] --> B{Risk Calculator}
+    A --> |"• Age<br/>• BMI<br/>• Past 28-day Step Count"| B
+    
+    B --> C[baseline_risk_adjustment.py]
+    C --> |"Age"| C
+    C --> |"Baseline risk %"| D{Age < 30?}
+    
+    D -->|Yes| E[📋 Final Output:<br/>Risk % same for 1/3/6 months<br/>= Baseline risk %]
+    
+    D -->|No| F[Activity Level Predictor]
+    F --> |"Past 28-day Step Count"| F
+    F --> |"Activity Level<br/>(low/moderate/high)"| G[Diabetes Risk Predictor]
+    
+    G --> |"Age, BMI, Activity Level"| G
+    G --> |"Diabetes risk level"| H[Future Steps Predictor]
+    
+    H --> |"Past 28-day Step Count"| H
+    H --> |"Predicted 6 months Step Count<br/>Forecast: 1, 3, 6 months"| I{Risk Level<br/>Moderate/High?}
+    
+    I -->|Yes| J[📊 Risk Calculation:<br/>Days < 5000 steps × 0.1% + Baseline risk %]
+    I -->|No| K[📋 Use Baseline risk %]
+    
+    J --> L[📋 Final Output:<br/>Risk % for 1/3/6 months]
+    K --> L
 ```
 
-
-Input:
-    -> Age, BMI, Past 28-day Step Count
-[ Risk calculator
-
-↓
--> Age
-[baseline_risk_adjustment.py]
-<- Baseline risk %
-
-if the Age is under 30:
-    end Risk calculator, 1 / 3 / 6 months is the same, use Baseline risk %
-else:
-
-↓
--> Past 28-day Step Count
-[ Activity Level Predictor ]
-<- Activity Level (low / moderate / high)
-
-↓
--> Age, BMI, Activity Level
-[ Diabetes Risk Predictor ]
-<- dia risk level
-
-↓
--> Past 28-day Step Count
-[ Future Steps Predictor ] → Forecast step activity (1, 3, 6 months)
-<- Predicted 6 months Step Count
-
-if dia risk level moderate or high:
-
-    risk is (counts the day < 5000 in  Predicted 6 months Step Count)*0.1% + Baseline risk %
-    end Risk calculator
-
-else:
-    use Baseline risk %
-
-]
-<- Risk % for 1 / 3 / 6 months
-
-
-
-rag:
-
--> Risk % for 1 / 3 / 6 months, age, Past 28-day Step Count
-LLM
-<- advice for sports by age, and analyse the steps
-
-
+### 🤖 RAG & LLM Integration
 
 ```
+Input → Risk % (1/3/6 months) + Age + Past 28-day Step Count
+  ↓
+[LLM with RAG]
+  ↓
+Output ← Personalized advice for sports by age + Step analysis
+```
+
+### 🔄 Complete Data Flow
+
+**Primary Inputs:**
+- Age
+- BMI  
+- Past 28-day Step Count
+
+**Intermediate Outputs:**
+- Baseline risk %
+- Activity Level (low/moderate/high)
+- Diabetes risk level
+- Predicted 6 months Step Count
+
+**Final Outputs:**
+- Risk % for 1/3/6 months
+- Personalized sports advice by age
+- Step activity analysis
+
+**Key Logic:**
+- **Age < 30:** Use baseline risk % for all time periods
+- **Age ≥ 30 & High/Moderate Risk:** Risk = (Days with <5000 steps × 0.1%) + Baseline risk %
+- **Age ≥ 30 & Low Risk:** Use baseline risk %
 
 
 ---
