@@ -31,7 +31,7 @@ class AnalysisResponse(BaseModel):
     """Risk analysis details"""
     baseline_risk: float
     activity_level: str
-    median_daily_steps: int
+    median_daily_steps: float
     diabetes_risk_level: str
     risk_calculation_method: str
     reason: str

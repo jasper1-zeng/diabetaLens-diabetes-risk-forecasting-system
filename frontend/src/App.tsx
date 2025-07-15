@@ -31,6 +31,9 @@ const App: React.FC = () => {
   const [riskResults, setRiskResults] = useState<RiskAssessmentResult | null>(
     loadFromLocalStorage('diabetalens_risk_results', null)
   );
+  const [originalRequestData, setOriginalRequestData] = useState<RiskAssessmentRequest | null>(
+    loadFromLocalStorage('diabetalens_original_request', null)
+  );
   const [recommendations, setRecommendations] = useState<ComprehensiveRecommendations | null>(
     loadFromLocalStorage('diabetalens_recommendations', null)
   );
@@ -82,6 +85,8 @@ const App: React.FC = () => {
       // Perform risk assessment
       const results = await apiService.assessRisk(data);
       setRiskResults(results);
+      setOriginalRequestData(data); // Store original request for recommendations
+      saveToLocalStorage('diabetalens_original_request', data);
       
       toast.success('Risk assessment completed successfully!');
       setCurrentStep('results');
@@ -112,21 +117,18 @@ const App: React.FC = () => {
 
     setRecommendationsLoading({ 
       isLoading: true, 
-      message: 'Generating AI recommendations with Claude...' 
+      message: 'Generating comprehensive AI recommendations... This may take up to 2 minutes.' 
     });
 
     try {
-      const requestData = {
-        user_profile: {
-          age: riskData.patient_data.age,
-          bmi: riskData.patient_data.bmi,
-          activity_level: riskData.analysis.activity_level,
-          avg_daily_steps: riskData.analysis.avg_daily_steps
-        },
-        risk_data: riskData
-      };
+      // The comprehensive recommendations endpoint expects HealthDataRequest format
+      // We need to reconstruct the original request from the stored data
+      if (!originalRequestData) {
+        toast.error('Original request data not available. Please perform a new risk assessment.');
+        return;
+      }
 
-      const recommendations = await apiService.getComprehensiveRecommendations(requestData);
+      const recommendations = await apiService.getComprehensiveRecommendations(originalRequestData);
       setRecommendations(recommendations);
       
       toast.success('AI recommendations generated successfully!');

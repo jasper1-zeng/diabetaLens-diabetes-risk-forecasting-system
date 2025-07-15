@@ -33,17 +33,17 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
   results,
   onNewAssessment
 }) => {
-  const { risk_percentages, analysis, patient_data, timestamp } = results;
+  const { risk_percentages, analysis, patient_info, step_analysis } = results;
   
   const healthMetrics = createHealthMetrics(
-    patient_data.age,
-    patient_data.bmi,
-    analysis.avg_daily_steps,
+    patient_info.age,
+    patient_info.bmi,
+    analysis.median_daily_steps,
     risk_percentages['3_month_risk']
   );
 
-  const activityLevel = getActivityLevel(analysis.avg_daily_steps);
-  const riskColor = getRiskLevelColor(analysis.risk_level);
+  const activityLevel = getActivityLevel(analysis.median_daily_steps);
+  const riskColor = getRiskLevelColor(analysis.diabetes_risk_level);
 
   const getRiskTrend = () => {
     const oneMonth = risk_percentages['1_month_risk'];
@@ -86,7 +86,7 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
                 </h2>
                 <p className="text-sm text-secondary-600 flex items-center gap-2">
                   <Clock className="w-3 h-3" />
-                  Generated on {formatDate(timestamp)} at {formatTime(timestamp)}
+                  Generated on {formatDate(new Date().toISOString())} at {formatTime(new Date().toISOString())}
                 </p>
               </div>
             </div>
@@ -110,8 +110,8 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
           <div className="card-body text-center">
             <div className="mb-4">
               <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold ${
-                getRiskLevelColor(analysis.risk_level) === 'success' ? 'bg-success-100 text-success-800' :
-                getRiskLevelColor(analysis.risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'success' ? 'bg-success-100 text-success-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
                 'bg-danger-100 text-danger-800'
               }`}>
                 {formatPercentage(risk_percentages['1_month_risk'], 1)}
@@ -131,8 +131,8 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
           <div className="card-body text-center">
             <div className="mb-4">
               <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold ${
-                getRiskLevelColor(analysis.risk_level) === 'success' ? 'bg-success-100 text-success-800' :
-                getRiskLevelColor(analysis.risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'success' ? 'bg-success-100 text-success-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
                 'bg-danger-100 text-danger-800'
               }`}>
                 {formatPercentage(risk_percentages['3_month_risk'], 1)}
@@ -157,8 +157,8 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
           <div className="card-body text-center">
             <div className="mb-4">
               <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center text-2xl font-bold ${
-                getRiskLevelColor(analysis.risk_level) === 'success' ? 'bg-success-100 text-success-800' :
-                getRiskLevelColor(analysis.risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'success' ? 'bg-success-100 text-success-800' :
+                getRiskLevelColor(analysis.diabetes_risk_level) === 'warning' ? 'bg-warning-100 text-warning-800' :
                 'bg-danger-100 text-danger-800'
               }`}>
                 {formatPercentage(risk_percentages['6_month_risk'], 1)}
@@ -247,13 +247,13 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
                   <AlertTriangle className="w-5 h-5 text-warning-600" />
                 )}
                 <span className="font-semibold">
-                  Risk Level: {analysis.risk_level.replace('-', ' ').toUpperCase()}
+                  Risk Level: {analysis.diabetes_risk_level.replace('-', ' ').toUpperCase()}
                 </span>
               </div>
               <p className="text-sm">
-                Based on your age ({patient_data.age} years), BMI ({patient_data.bmi}), 
+                Based on your age ({patient_info.age} years), BMI ({patient_info.bmi}), 
                 and activity level ({analysis.activity_level}), your diabetes risk is 
-                classified as {analysis.risk_level.replace('-', ' ')}.
+                classified as {analysis.diabetes_risk_level.replace('-', ' ')}.
               </p>
             </div>
 
@@ -327,10 +327,10 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
                   Average Daily Steps
                 </p>
                 <p className="text-lg font-semibold text-secondary-900">
-                  {formatNumber(analysis.avg_daily_steps)}
+                  {formatNumber(analysis.median_daily_steps)}
                 </p>
                 <p className="text-xs text-secondary-600">
-                  Over {patient_data.step_count_days} days
+                  Over {step_analysis.total_days} days
                 </p>
               </div>
               <div>
@@ -362,9 +362,9 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
             <div className="space-y-2">
               <h4 className="font-medium text-secondary-900">Patient Profile</h4>
               <div className="space-y-1 text-sm text-secondary-600">
-                <p>Age: {patient_data.age} years</p>
-                <p>BMI: {patient_data.bmi} kg/m²</p>
-                <p>Data Period: {patient_data.step_count_days} days</p>
+                              <p>Age: {patient_info.age} years</p>
+              <p>BMI: {patient_info.bmi} kg/m²</p>
+              <p>Data Period: {step_analysis.total_days} days</p>
               </div>
             </div>
             
@@ -380,7 +380,7 @@ const ResultsDashboard: React.FC<ResultsDashboardProps> = ({
             <div className="space-y-2">
               <h4 className="font-medium text-secondary-900">Key Insights</h4>
               <div className="space-y-1 text-sm text-secondary-600">
-                <p>Risk Level: {analysis.risk_level.replace('-', ' ')}</p>
+                <p>Risk Level: {analysis.diabetes_risk_level.replace('-', ' ')}</p>
                 <p>Activity: {analysis.activity_level}</p>
                 <p>Method: {analysis.risk_calculation_method.replace('_', ' ')}</p>
               </div>

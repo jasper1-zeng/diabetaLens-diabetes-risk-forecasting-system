@@ -20,7 +20,7 @@ from typing import Union, Dict
 # Add parent directories to path for imports
 current_dir = Path(__file__).parent
 scripts_dir = current_dir.parent
-project_root = scripts_dir.parent
+project_root = scripts_dir.parent.parent  # Go up one more level to reach actual project root
 sys.path.append(str(scripts_dir))
 sys.path.append(str(project_root))
 

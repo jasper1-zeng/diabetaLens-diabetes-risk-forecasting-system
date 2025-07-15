@@ -20,6 +20,11 @@ export interface RiskAssessmentRequest {
 }
 
 export interface RiskAssessmentResult {
+  patient_info: {
+    age: number;
+    bmi: number;
+    age_group: string;
+  };
   risk_percentages: {
     '1_month_risk': number;
     '3_month_risk': number;
@@ -28,16 +33,21 @@ export interface RiskAssessmentResult {
   analysis: {
     baseline_risk: number;
     activity_level: 'low' | 'moderate' | 'high';
-    risk_level: 'low-risk' | 'medium-risk' | 'high-risk';
-    avg_daily_steps: number;
+    median_daily_steps: number;
+    diabetes_risk_level: 'low-risk' | 'medium-risk' | 'high-risk';
     risk_calculation_method: string;
+    reason: string;
   };
-  patient_data: {
-    age: number;
-    bmi: number;
-    step_count_days: number;
+  step_analysis: {
+    activity_level: 'low' | 'moderate' | 'high';
+    median_steps: number;
+    mean_steps: number;
+    total_days: number;
+    valid_days: number;
+    outliers_removed: number;
+    min_steps: number;
+    max_steps: number;
   };
-  timestamp: string;
 }
 
 // Claude AI Recommendation Types
@@ -63,13 +73,39 @@ export interface RecommendationResponse {
 }
 
 export interface ComprehensiveRecommendations {
-  comprehensive: RecommendationResponse;
-  activity_focused: RecommendationResponse;
-  risk_explanation: RecommendationResponse;
-  summary: {
-    total_api_calls: number;
-    recommendation_types: string[];
+  user_profile: {
+    age: number;
+    bmi: number;
+    activity_level: string;
+    median_steps: number;
+    diabetes_risk_level: string;
+    risk_1_month: number;
+    risk_3_month: number;
+    risk_6_month: number;
   };
+  recommendations: {
+    comprehensive: {
+      content: string;
+      type: string;
+    };
+    activity_focused: {
+      content: string;
+      type: string;
+    };
+    risk_explanation: {
+      content: string;
+      type: string;
+    };
+  };
+  metadata: {
+    generated_at: string;
+    model_used: string;
+    api_usage: {
+      total_input_tokens: number;
+      total_output_tokens: number;
+    };
+  };
+  risk_assessment: RiskAssessmentResult;
 }
 
 // UI Component Types

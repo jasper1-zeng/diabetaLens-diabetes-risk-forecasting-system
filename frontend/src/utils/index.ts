@@ -165,7 +165,7 @@ export function parseStepData(input: string): number[] {
       let stepCount: number | null = null;
       
       // Format: "Day 1: 6500 steps" or "Day 1: 6500"
-      const dayFormatMatch = trimmed.match(/Day\s+\d+:\s*(\d+)/i);
+      const dayFormatMatch = trimmed.match(/Day\s+\d+:\s*(\d{3,})/i);
       if (dayFormatMatch) {
         stepCount = parseInt(dayFormatMatch[1]);
       }
@@ -176,9 +176,13 @@ export function parseStepData(input: string): number[] {
           stepCount = parseInt(numberMatch[1]);
         }
       }
-      // Format: just numbers separated by spaces/commas
+      // Format: standalone numbers (must be 3+ digits to avoid day numbers)
+      else if (trimmed.match(/^\d{3,}$/)) {
+        stepCount = parseInt(trimmed);
+      }
+      // Format: numbers in text (look for 3+ digit numbers, not day numbers)
       else {
-        const numberMatch = trimmed.match(/(\d+)/);
+        const numberMatch = trimmed.match(/\b(\d{3,})\b/);
         if (numberMatch) {
           stepCount = parseInt(numberMatch[1]);
         }

@@ -103,7 +103,10 @@ class ApiService {
   }
 
   async getComprehensiveRecommendations(data: RecommendationRequest): Promise<ComprehensiveRecommendations> {
-    const response = await this.client.post('/recommendations/generate/comprehensive', data);
+    // Use extended timeout for comprehensive recommendations (multiple Claude API calls)
+    const response = await this.client.post('/recommendations/generate/comprehensive', data, {
+      timeout: 120000 // 2 minutes
+    });
     return response.data;
   }
 

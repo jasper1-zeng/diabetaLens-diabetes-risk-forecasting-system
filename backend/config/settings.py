@@ -24,7 +24,7 @@ class Settings:
     # Application Settings
     APP_NAME: str = "DiabetaLens API"
     APP_VERSION: str = "1.0.0"
-    DEBUG: bool = os.getenv("DEBUG", "False").lower() == "true"
+    DEBUG: bool = os.getenv("DEBUG", "True").lower() == "true"
     
     # API Configuration
     API_HOST: str = os.getenv("API_HOST", "localhost")
