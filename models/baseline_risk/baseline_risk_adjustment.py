@@ -4,6 +4,8 @@ Based on Australian Bureau of Statistics diabetes prevalence data (2022)
 
 This module adjusts the baseline 5% lifetime diabetes risk using real-world
 prevalence data by age and sex from the Australian Bureau of Statistics.
+
+ALL RISK VALUES ARE RETURNED AS PERCENTAGES (%)
 """
 
 import pandas as pd
@@ -17,23 +19,26 @@ class BaselineRiskAdjustment:
     
     The baseline 5% lifetime risk is adjusted using current prevalence rates
     by age and sex to provide a more accurate starting point for risk forecasting.
+    
+    ALL OUTPUTS ARE PERCENTAGES (%) - No conversion needed
     """
     
     def __init__(self):
         """Initialize with Australian diabetes prevalence data from 2022."""
         # Data from Australian Bureau of Statistics, Diabetes 2022
+        # All values below are in percentages (%)
         self.prevalence_data = {
             'age_groups': ['0-44', '45-54', '55-64', '65-74', '75+'],
             'age_midpoints': [22, 49.5, 59.5, 69.5, 80],  # Midpoints for interpolation
-            'males': [1.2, 6.1, 11.8, 17.1, 20.7],
-            'females': [1.0, 5.2, 10.5, 10.5, 17.2],
-            'males_ci_low': [0.7, 3.8, 8.9, 14.6, 16.3],
-            'males_ci_high': [1.7, 8.4, 14.7, 19.6, 25.1],
-            'females_ci_low': [0.7, 3.1, 8.0, 7.9, 13.8],
-            'females_ci_high': [1.3, 7.3, 13.0, 13.1, 20.6]
+            'males': [1.2, 6.1, 11.8, 17.1, 20.7],       # Percentage values
+            'females': [1.0, 5.2, 10.5, 10.5, 17.2],     # Percentage values
+            'males_ci_low': [0.7, 3.8, 8.9, 14.6, 16.3],  # Percentage values
+            'males_ci_high': [1.7, 8.4, 14.7, 19.6, 25.1], # Percentage values
+            'females_ci_low': [0.7, 3.1, 8.0, 7.9, 13.8],  # Percentage values
+            'females_ci_high': [1.3, 7.3, 13.0, 13.1, 20.6] # Percentage values
         }
         
-        # Reference baseline risk from requirements
+        # Reference baseline risk from requirements (percentage)
         self.baseline_lifetime_risk = 5.0  # 5%
         
     def get_current_prevalence(self, age: int, sex: Optional[str] = None) -> float:
@@ -45,7 +50,7 @@ class BaselineRiskAdjustment:
             sex (Optional[str]): 'male', 'female', or None. If None, uses combined average
             
         Returns:
-            float: Current diabetes prevalence percentage
+            float: Current diabetes prevalence as percentage (%)
         """
         # Handle None or normalize sex parameter
         if sex is not None:
@@ -91,7 +96,7 @@ class BaselineRiskAdjustment:
             sex (Optional[str]): 'male', 'female', or None. If None, uses combined average
             
         Returns:
-            float: Adjusted baseline risk percentage
+            float: Adjusted baseline risk as percentage (%)
         """
         current_prevalence = self.get_current_prevalence(age, sex)
         
@@ -99,8 +104,8 @@ class BaselineRiskAdjustment:
         # The logic: if current prevalence is higher than expected for the
         # baseline population, adjust the lifetime risk proportionally
         
-        # Expected average prevalence for baseline 5% lifetime risk (estimated)
-        expected_avg_prevalence = 3.0  # Rough estimate for general population
+        # Expected average prevalence for baseline 5% lifetime risk (estimated %)
+        expected_avg_prevalence = 3.0  # Rough estimate for general population (%)
         
         # Calculate adjustment factor
         adjustment_factor = current_prevalence / expected_avg_prevalence
@@ -108,7 +113,7 @@ class BaselineRiskAdjustment:
         # Apply bounds to prevent extreme adjustments
         adjustment_factor = max(0.5, min(adjustment_factor, 4.0))
         
-        # Calculate adjusted baseline
+        # Calculate adjusted baseline (percentage)
         adjusted_baseline = self.baseline_lifetime_risk * adjustment_factor
         
         # Ensure reasonable bounds (1% to 25% lifetime risk)
@@ -125,7 +130,13 @@ class BaselineRiskAdjustment:
             sex (Optional[str]): 'male', 'female', or None. If None, uses combined average
             
         Returns:
-            dict: Risk profile with various metrics
+            dict: Risk profile with various metrics (all percentage values marked with %)
+                - current_prevalence: Current diabetes prevalence (%)
+                - adjusted_baseline_lifetime_risk: Adjusted baseline risk (%)
+                - original_baseline_risk: Original 5% baseline (%)
+                - adjustment_factor: Multiplier applied to baseline (ratio)
+                - relative_risk_vs_population: Risk relative to population (ratio)
+                - risk_category: Risk category (string)
         """
         current_prevalence = self.get_current_prevalence(age, sex)
         adjusted_baseline = self.calculate_adjusted_baseline(age, sex)
@@ -137,16 +148,16 @@ class BaselineRiskAdjustment:
         return {
             'age': age,
             'sex': sex if sex is not None else 'combined',
-            'current_prevalence': round(current_prevalence, 2),
-            'adjusted_baseline_lifetime_risk': adjusted_baseline,
-            'original_baseline_risk': self.baseline_lifetime_risk,
+            'current_prevalence_percent': round(current_prevalence, 2),
+            'adjusted_baseline_lifetime_risk_percent': adjusted_baseline,
+            'original_baseline_risk_percent': self.baseline_lifetime_risk,
             'adjustment_factor': round(adjusted_baseline / self.baseline_lifetime_risk, 2),
             'relative_risk_vs_population': round(relative_risk, 2),
             'risk_category': self._categorize_risk(adjusted_baseline)
         }
     
     def _categorize_risk(self, risk_percentage: float) -> str:
-        """Categorize risk level based on adjusted baseline."""
+        """Categorize risk level based on adjusted baseline percentage."""
         if risk_percentage < 3:
             return 'Low'
         elif risk_percentage < 8:
@@ -167,7 +178,7 @@ def get_adjusted_baseline_risk(age: int, sex: Optional[str] = None) -> float:
         sex (Optional[str]): 'male', 'female', or None. If None, uses combined average
         
     Returns:
-        float: Adjusted baseline risk percentage
+        float: Adjusted baseline risk as percentage (%)
     """
     adjuster = BaselineRiskAdjustment()
     return adjuster.calculate_adjusted_baseline(age, sex)
@@ -182,7 +193,7 @@ def get_full_risk_profile(age: int, sex: Optional[str] = None) -> dict:
         sex (Optional[str]): 'male', 'female', or None. If None, uses combined average
         
     Returns:
-        dict: Complete risk profile
+        dict: Complete risk profile with all percentage values clearly marked
     """
     adjuster = BaselineRiskAdjustment()
     return adjuster.get_risk_profile(age, sex)
@@ -191,6 +202,8 @@ def get_full_risk_profile(age: int, sex: Optional[str] = None) -> dict:
 # Example usage and testing
 if __name__ == "__main__":
     print("Baseline Risk Adjustment for Diabetes Forecasting")
+    print("=" * 50)
+    print("ALL OUTPUTS ARE IN PERCENTAGES (%)")
     print("=" * 50)
     
     # Test with different ages and sexes (including cases without sex)
@@ -208,8 +221,8 @@ if __name__ == "__main__":
         profile = get_full_risk_profile(age, sex)
         sex_display = sex.title() if sex else "Unknown (using combined average)"
         print(f"\nAge {age}, {sex_display}:")
-        print(f"  Current Prevalence: {profile['current_prevalence']}%")
-        print(f"  Original Baseline: {profile['original_baseline_risk']}%")
-        print(f"  Adjusted Baseline: {profile['adjusted_baseline_lifetime_risk']}%")
+        print(f"  Current Prevalence: {profile['current_prevalence_percent']}%")
+        print(f"  Original Baseline: {profile['original_baseline_risk_percent']}%")
+        print(f"  Adjusted Baseline: {profile['adjusted_baseline_lifetime_risk_percent']}%")
         print(f"  Risk Category: {profile['risk_category']}")
         print(f"  Adjustment Factor: {profile['adjustment_factor']}x")

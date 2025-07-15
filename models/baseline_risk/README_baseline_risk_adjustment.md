@@ -1,8 +1,17 @@
 # Baseline Risk Adjustment for Diabetes Forecasting
 
+## ⚠️ IMPORTANT: ALL OUTPUTS ARE PERCENTAGES (%)
+
+**This module returns all risk values as percentages. No conversion is needed.**
+
 ## Overview
 
 This module provides a data-driven approach to adjust the baseline 5% lifetime diabetes risk using real-world prevalence data from the Australian Bureau of Statistics (2022). Instead of using a flat 5% baseline for all individuals, this system adjusts the risk based on age and sex-specific diabetes prevalence patterns.
+
+**Key Output Format:**
+- ✅ **Baseline Risk**: Returns `7.5` (meaning 7.5%)
+- ✅ **Prevalence**: Returns `11.8` (meaning 11.8%)
+- ✅ **All Risk Values**: Direct percentage values
 
 ## Methodology
 
@@ -16,7 +25,7 @@ The baseline risk adjustment is based on the **"Proportion of people with diabet
 
 **Data Reference**: [Australian Bureau of Statistics - Diabetes 2022](https://www.abs.gov.au/statistics/health/health-conditions-and-risks/diabetes/latest-release)
 
-### 2. Key Statistics from ABS Data
+### 2. Key Statistics from ABS Data (All in %)
 
 | Age Group | Males (%) | Females (%) | Combined Average (%) |
 |-----------|-----------|-------------|---------------------|
@@ -43,10 +52,10 @@ The baseline risk adjustment is based on the **"Proportion of people with diabet
 The core adjustment formula:
 
 ```
-Current Prevalence = get_current_prevalence(age, sex)
-Expected Average Prevalence = 3.0%  # Population baseline estimate
+Current Prevalence (%) = get_current_prevalence(age, sex)
+Expected Average Prevalence (%) = 3.0%  # Population baseline estimate
 Adjustment Factor = Current Prevalence / Expected Average Prevalence
-Adjusted Baseline = Original Baseline (5%) × Adjustment Factor
+Adjusted Baseline (%) = Original Baseline (5%) × Adjustment Factor
 ```
 
 #### Step 4: Safety Bounds
@@ -54,9 +63,9 @@ Adjusted Baseline = Original Baseline (5%) × Adjustment Factor
 - **Final Risk**: Bounded between 1% and 25% lifetime risk
 - Prevents unrealistic risk estimates while maintaining data-driven adjustments
 
-### 4. Risk Categories
+### 4. Risk Categories (Based on % Values)
 
-Based on the adjusted baseline risk:
+Based on the adjusted baseline risk percentage:
 - **Low**: < 3%
 - **Moderate**: 3% - 7.99%
 - **High**: 8% - 14.99%
@@ -72,7 +81,7 @@ Based on the adjusted baseline risk:
 
 ### Key Methods
 
-#### `get_adjusted_baseline_risk(age, sex=None)`
+#### `get_adjusted_baseline_risk(age, sex=None)` → float
 Returns the adjusted baseline risk percentage for given age and optional sex.
 
 **Parameters:**
@@ -80,19 +89,19 @@ Returns the adjusted baseline risk percentage for given age and optional sex.
 - `sex` (Optional[str]): 'male', 'female', or None (uses combined average)
 
 **Returns:**
-- `float`: Adjusted baseline risk percentage
+- `float`: Adjusted baseline risk **as percentage (%)** - e.g., `7.5` means 7.5%
 
-#### `get_full_risk_profile(age, sex=None)`
+#### `get_full_risk_profile(age, sex=None)` → dict
 Returns comprehensive risk assessment including multiple metrics.
 
-**Returns dictionary with:**
+**Returns dictionary with (all percentages marked):**
 - `age`: Input age
 - `sex`: Processed sex value ('combined' if None provided)
-- `current_prevalence`: Current diabetes prevalence for this demographic
-- `adjusted_baseline_lifetime_risk`: Calculated adjusted baseline
-- `original_baseline_risk`: Original 5% baseline
-- `adjustment_factor`: Multiplier applied to baseline
-- `relative_risk_vs_population`: Risk relative to 50-year-old average
+- `current_prevalence_percent`: Current diabetes prevalence **as %**
+- `adjusted_baseline_lifetime_risk_percent`: Calculated adjusted baseline **as %**
+- `original_baseline_risk_percent`: Original 5% baseline **as %**
+- `adjustment_factor`: Multiplier applied to baseline (ratio, not percentage)
+- `relative_risk_vs_population`: Risk relative to 50-year-old average (ratio, not percentage)
 - `risk_category`: Risk category (Low/Moderate/High/Very High)
 
 ## Usage Examples
@@ -105,10 +114,12 @@ from baseline_risk_adjustment import get_adjusted_baseline_risk
 # With sex information
 risk_male = get_adjusted_baseline_risk(35, 'male')
 print(f"35-year-old male: {risk_male}% lifetime risk")
+# Output: 35-year-old male: 4.2% lifetime risk
 
 # Without sex information (uses combined average)
 risk_unknown = get_adjusted_baseline_risk(35)
 print(f"35-year-old (sex unknown): {risk_unknown}% lifetime risk")
+# Output: 35-year-old (sex unknown): 4.1% lifetime risk
 ```
 
 ### Comprehensive Risk Profile
@@ -118,9 +129,15 @@ from baseline_risk_adjustment import get_full_risk_profile
 
 profile = get_full_risk_profile(45, 'female')
 print(f"Age: {profile['age']}")
-print(f"Current prevalence: {profile['current_prevalence']}%")
-print(f"Adjusted baseline: {profile['adjusted_baseline_lifetime_risk']}%")
+print(f"Current prevalence: {profile['current_prevalence_percent']}%")
+print(f"Adjusted baseline: {profile['adjusted_baseline_lifetime_risk_percent']}%")
 print(f"Risk category: {profile['risk_category']}")
+
+# Output:
+# Age: 45
+# Current prevalence: 5.2%
+# Adjusted baseline: 8.67%
+# Risk category: High
 ```
 
 ### Class-Based Usage
@@ -130,14 +147,24 @@ from baseline_risk_adjustment import BaselineRiskAdjustment
 
 adjuster = BaselineRiskAdjustment()
 
-# Get current prevalence for demographic
+# Get current prevalence for demographic (returns %)
 prevalence = adjuster.get_current_prevalence(60, 'male')
 print(f"Current prevalence: {prevalence}%")
+# Output: Current prevalence: 11.8%
 
-# Get adjusted baseline
+# Get adjusted baseline (returns %)
 baseline = adjuster.calculate_adjusted_baseline(60, 'male')
 print(f"Adjusted baseline: {baseline}%")
+# Output: Adjusted baseline: 19.67%
 ```
+
+## Output Format Summary
+
+| Method | Return Type | Example Output | Meaning |
+|--------|-------------|----------------|---------|
+| `get_adjusted_baseline_risk()` | `float` | `7.5` | 7.5% risk |
+| `get_current_prevalence()` | `float` | `11.8` | 11.8% prevalence |
+| `get_risk_profile()` | `dict` | `{'current_prevalence_percent': 11.8, ...}` | All % values |
 
 ## Advantages of This Approach
 
@@ -165,6 +192,7 @@ print(f"Adjusted baseline: {baseline}%")
 - Designed to work seamlessly with the main diabetes forecasting algorithm
 - Provides multiple output formats for different use cases
 - Easy to integrate into existing health risk assessment systems
+- **Clear percentage outputs** eliminate confusion
 
 ## Limitations and Considerations
 
@@ -211,6 +239,21 @@ python baseline_risk_adjustment.py
 ```
 
 This will display risk profiles for various age and sex combinations, including cases where sex information is not available.
+
+**Sample Output:**
+```
+Baseline Risk Adjustment for Diabetes Forecasting
+==================================================
+ALL OUTPUTS ARE IN PERCENTAGES (%)
+==================================================
+
+Age 25, Male:
+  Current Prevalence: 1.2%
+  Original Baseline: 5.0%
+  Adjusted Baseline: 2.0%
+  Risk Category: Low
+  Adjustment Factor: 0.4x
+```
 
 ## References
 

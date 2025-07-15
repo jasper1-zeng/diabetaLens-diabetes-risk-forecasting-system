@@ -17,32 +17,64 @@
 
 ### 📊 Risk Calculator Pipeline
 
-```mermaid
-flowchart TD
-    A[👤 User Input] --> B{Risk Calculator}
-    A --> |"• Age<br/>• BMI<br/>• Past 28-day Step Count"| B
-    
-    B --> C[baseline_risk_adjustment.py]
-    C --> |"Age"| C
-    C --> |"Baseline risk %"| D{Age < 30?}
-    
-    D -->|Yes| E[📋 Final Output:<br/>Risk % same for 1/3/6 months<br/>= Baseline risk %]
-    
-    D -->|No| F[Activity Level Predictor]
-    F --> |"Past 28-day Step Count"| F
-    F --> |"Activity Level<br/>(low/moderate/high)"| G[Diabetes Risk Predictor]
-    
-    G --> |"Age, BMI, Activity Level"| G
-    G --> |"Diabetes risk level"| H[Future Steps Predictor]
-    
-    H --> |"Past 28-day Step Count"| H
-    H --> |"Predicted 6 months Step Count<br/>Forecast: 1, 3, 6 months"| I{Risk Level<br/>Moderate/High?}
-    
-    I -->|Yes| J[📊 Risk Calculation:<br/>Days < 5000 steps × 0.1% + Baseline risk %]
-    I -->|No| K[📋 Use Baseline risk %]
-    
-    J --> L[📋 Final Output:<br/>Risk % for 1/3/6 months]
-    K --> L
+```
+📥 INPUT: Age, BMI, Past 28-day Step Count
+    ↓
+┌─────────────────────────────────────┐
+│        🏥 Risk Calculator           │
+└─────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────┐
+│   baseline_risk_adjustment.py       │
+│   Input: Age                        │
+│   Output: Baseline risk % (float)   │
+│   Example: 7.5 (means 7.5%)        │
+└─────────────────────────────────────┘
+    ↓
+┌─────────────────────────────────────┐
+│          🔍 Age Check               │
+│       Age < 30?                     │
+└─────────────────────────────────────┘
+    ↓                    ↓
+  YES                   NO
+    ↓                    ↓
+📤 FINAL OUTPUT      ┌─────────────────────────────────────┐
+Risk % same for      │     Activity Level Predictor       │
+1/3/6 months =       │     Input: Past 28-day Step Count  │
+Baseline risk %      │     Output: Activity Level          │
+                     │     (low/moderate/high)             │
+                     └─────────────────────────────────────┘
+                                      ↓
+                     ┌─────────────────────────────────────┐
+                     │     Diabetes Risk Predictor        │
+                     │     Input: Age, BMI, Activity Level │
+                     │     Output: Diabetes risk level     │
+                     └─────────────────────────────────────┘
+                                      ↓
+                     ┌─────────────────────────────────────┐
+                     │      Future Steps Predictor        │
+                     │  Input: Past 28-day Step Count     │
+                     │  Output: Predicted 6 months        │
+                     │  Step Count (1, 3, 6 months)       │
+                     └─────────────────────────────────────┘
+                                      ↓
+                     ┌─────────────────────────────────────┐
+                     │        🎯 Risk Level Check          │
+                     │    Moderate or High Risk?           │
+                     └─────────────────────────────────────┘
+                               ↓           ↓
+                             YES          NO
+                               ↓           ↓
+                     ┌─────────────────┐   ┌─────────────────┐
+                     │ 📊 Calculate:   │   │ 📋 Use:         │
+                     │ (Days < 5000    │   │ Baseline        │
+                     │ steps × 0.1%) + │   │ risk % (float)  │
+                     │ Baseline risk % │   │                 │
+                     └─────────────────┘   └─────────────────┘
+                               ↓_____________↓
+                                      ↓
+                            📤 FINAL OUTPUT
+                         Risk % for 1/3/6 months
 ```
 
 ### 🤖 RAG & LLM Integration
@@ -69,7 +101,7 @@ Output ← Personalized advice for sports by age + Step analysis
 - Predicted 6 months Step Count
 
 **Final Outputs:**
-- Risk % for 1/3/6 months
+- Risk % for 1/3/6 months (as float values, e.g., 7.5 means 7.5%)
 - Personalized sports advice by age
 - Step activity analysis
 
