@@ -1,156 +1,136 @@
-# Activity Level Predictor
+# Time Series Activity Level Predictor
 
 ## Overview
-The Activity Level Predictor is a simple yet effective module for classifying daily physical activity levels based on step counts from wearable devices. This predictor serves as a key feature in the DiabetaLens diabetes risk forecasting system.
+A simple and focused module for predicting activity levels from time series step count data (e.g., 28 days from wearable devices). Specifically designed for the DiabetaLens diabetes risk forecasting system.
 
 ## Statistical Background
-The predictor is calibrated based on a dataset with the following characteristics:
-- **Distribution Type**: Normal distribution
+Calibrated based on normally distributed step count data:
 - **Mean**: 8,028 steps/day
 - **Median**: 8,027 steps/day
-- **Distribution Shape**: Nearly perfect normal distribution (mean ≈ median)
+- **Method**: Robust median aggregation (optimal for real-world data with outliers)
 
 ## Activity Level Classifications
-
-### Current Thresholds (Statistically Calibrated)
-- **Low Activity**: ≤ 6,000 steps/day
-- **Moderate Activity**: 6,001 - 10,000 steps/day
-- **High Activity**: > 10,000 steps/day
-
-### Statistical Interpretation
-With a mean of 8,028 steps and normal distribution:
-- **Low**: ~25th percentile and below (sedentary population)
-- **Moderate**: ~25th-75th percentile (typical active population around mean)
-- **High**: ~75th percentile and above (highly active population)
-- Thresholds are balanced around the distribution mean (±~2000 steps)
-- Provides better discrimination for diabetes risk assessment
+- **Low**: ≤ 6,000 steps/day (sedentary lifestyle)
+- **Moderate**: 6,001 - 10,000 steps/day (active lifestyle)
+- **High**: > 10,000 steps/day (very active lifestyle)
 
 ## Usage
 
-### Basic Usage
+### Basic Time Series Prediction
 ```python
-from models.activity_level_predictor.activity_level_predictor import predict_activity_level
+from scripts.activity_level_predictor.activity_level_predictor import predict_time_series_activity_level
 
-# Single prediction
-activity_level = predict_activity_level(7500)
-print(activity_level)  # Output: 'moderate'
+# 28 days of step data
+monthly_steps = [7500, 8200, 6800, 9100, 5500, 8500, 7200, ...]  # 28 days
+
+# Get overall activity level
+result = predict_time_series_activity_level(monthly_steps)
+
+print(f"Activity Level: {result['activity_level']}")        # 'moderate'
+print(f"Median Steps: {result['median_steps']}")            # 7840.5 (primary)
+print(f"Valid Days: {result['valid_days']}")                # 28 (after outlier removal)
 ```
 
-### Batch Processing
-```python
-from models.activity_level_predictor.activity_level_predictor import predict_activity_levels_batch
-
-steps_data = [3000, 6500, 8000, 12000, 4500]
-activity_levels = predict_activity_levels_batch(steps_data)
-print(activity_levels)  # Output: ['low', 'moderate', 'moderate', 'high', 'low']
-```
-
-### Statistical Analysis
-```python
-from models.activity_level_predictor.activity_level_predictor import get_activity_level_stats
-
-# Get distribution statistics
-stats = get_activity_level_stats(steps_data)
-print(stats)
-```
-
-Example output:
+### Output Format
 ```python
 {
-    'total_records': 1000,
-    'low': {'count': 250, 'percentage': 25.0},
-    'moderate': {'count': 500, 'percentage': 50.0},
-    'high': {'count': 250, 'percentage': 25.0}
+    'activity_level': 'moderate',      # Main prediction (based on median)
+    'median_steps': 7840.5,           # Median daily steps (primary metric)
+    'mean_steps': 7650.2,             # Mean daily steps (for comparison)
+    'total_days': 28,                 # Original number of days
+    'valid_days': 26,                 # Days after outlier filtering
+    'outliers_removed': 2,            # Number of outliers filtered out
+    'min_steps': 3500,                # Minimum valid daily steps
+    'max_steps': 12000                # Maximum valid daily steps
 }
 ```
 
-## Functions
+## Key Features
 
-### `predict_activity_level(steps)`
-Classifies a single step count into activity level.
+### ✅ **Optimized for Real-World Time Series**
+- **Input**: List of daily step counts (any duration)
+- **Output**: Single activity level classification
+- **Method**: Robust median aggregation (handles outliers better than mean)
+- **Outlier Filtering**: Removes device errors (< 100 or > 50,000 steps)
 
-**Parameters:**
-- `steps` (int/float): Daily step count
+### ✅ **Perfect for ML Features**
+- Clean categorical output ('low', 'moderate', 'high')
+- Stable over time periods (reduces daily noise)
+- Ideal for diabetes risk prediction models
 
-**Returns:**
-- `str`: Activity level ('low', 'moderate', 'high')
+### ✅ **Simple & Fast**
+- No external dependencies
+- Minimal memory footprint
+- O(n log n) time complexity (due to sorting for median)
 
-**Raises:**
-- `ValueError`: If steps is negative
+## Why Robust Median Method?
 
-### `predict_activity_levels_batch(steps_list)`
-Classifies multiple step counts efficiently.
+### 🚨 **Real-World Challenges**
+Wearable device data often contains:
+- **Sick Days**: 500-2000 steps (dramatically affects mean)
+- **Travel Days**: 20,000+ steps (sightseeing) or 1000 steps (flights)
+- **Device Errors**: 0 steps (not worn) or 75,000 steps (glitches)
+- **Weekly Patterns**: Weekends often 30-50% different from weekdays
+- **Special Events**: Holidays, emergencies, bed rest
 
-**Parameters:**
-- `steps_list` (list): List of daily step counts
+### ✅ **Median Advantages**
+- **Robust to Outliers**: Sick days don't skew the result
+- **Representative**: Better captures "typical" activity level
+- **Stable**: More consistent predictions for diabetes risk
+- **Clinical Relevance**: Median represents habitual behavior better than mean
 
-**Returns:**
-- `list`: List of activity levels
+### 📊 **Example Comparison**
+```python
+# Active person with 3 sick days
+normal_days = [8000, 8500, 7800, 8200, 8100] * 5  # 25 days
+sick_days = [800, 1200, 900]  # 3 sick days
 
-### `get_activity_level_stats(steps_list)`
-Provides statistical summary of activity levels in a dataset.
-
-**Parameters:**
-- `steps_list` (list): List of daily step counts
-
-**Returns:**
-- `dict`: Statistics including counts and percentages
+# Simple Mean: 7,400 steps → "MODERATE" (wrong!)
+# Robust Median: 8,100 steps → "HIGH" (correct!)
+```
 
 ## Integration with DiabetaLens
 
-This predictor integrates seamlessly with the diabetes risk forecasting system:
+```python
+# Example: Processing patient data
+patient_28_days = load_patient_step_data()  # 28 days
+activity_feature = predict_time_series_activity_level(patient_28_days)
 
-1. **Feature Engineering**: Converts raw step data into categorical features
-2. **Risk Assessment**: Activity level serves as a key predictor for diabetes risk
-3. **Data Pipeline**: Processes wearable device data in batch or real-time
+# Use in risk model
+risk_features = {
+    'activity_level': activity_feature['activity_level'],
+    'median_daily_steps': activity_feature['median_steps'],  # More robust than mean
+    'data_quality': activity_feature['valid_days'] / activity_feature['total_days'],
+    # ... other features
+}
+```
 
-## Health Context
-
-### Activity Level Guidelines
-- **Low (≤6,000 steps)**: Sedentary lifestyle, increased health risks
-- **Moderate (6,001-10,000 steps)**: Active lifestyle, meeting/exceeding recommendations
-- **High (>10,000 steps)**: Very active lifestyle, optimal health benefits
-
-### Clinical Relevance
-Physical activity is a critical factor in diabetes prevention and management:
-- Higher activity levels correlate with lower diabetes risk
-- Step count is an objective, measurable indicator
-- Can inform intervention strategies
+## Clinical Relevance
+- **Low activity**: Associated with higher diabetes risk
+- **Moderate/High activity**: Protective factors against diabetes
+- **28-day periods**: Provide stable, representative activity patterns
+- **Robust median**: Represents habitual behavior, not influenced by temporary illness
+- **Outlier filtering**: Removes device errors and extreme events for better accuracy
 
 ## Testing
 
-Run the built-in tests:
+Run the test suite:
 ```bash
-python models/activity_level_predictor/activity_level_predictor.py
+python scripts/activity_level_predictor/activity_level_predictor.py
 ```
 
-## Data Sources
-
-This predictor is designed to work with:
-- Smartwatch step count data
-- Fitness tracker exports
-- Health app data
-- Any daily step count measurements
-
-## Performance
-
-- **Speed**: O(1) for single predictions, O(n) for batch processing
-- **Memory**: Minimal memory footprint
-- **Accuracy**: Based on validated health guidelines and statistical analysis
-
-## Future Enhancements
-
-Potential improvements:
-1. **Adaptive Thresholds**: Adjust based on individual baselines
-2. **Temporal Analysis**: Consider activity trends over time
-3. **Multi-metric**: Incorporate heart rate, calories, etc.
-4. **Personalization**: Age and health status adjustments
+Test output includes:
+- 28-day simulation based on real distribution
+- Real-world scenarios with outliers (sick days, travel, device errors)
+- Comparison between robust median and simple mean methods
+- Outlier detection and filtering validation
 
 ## Dependencies
-
 - Python 3.6+
-- No external dependencies (uses only built-in Python libraries)
+- No external libraries required
 
-## License
-
-Part of the DiabetaLens diabetes risk forecasting system. 
+## Use Cases
+- **Healthcare monitoring**: 28-day activity assessments
+- **Risk prediction**: ML feature generation
+- **Patient profiling**: Activity level classification
+- **Longitudinal studies**: Activity pattern analysis 
