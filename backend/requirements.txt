@@ -1,0 +1,39 @@
+# DiabetaLens Backend API Requirements
+# Phase 2: Claude AI Integration
+
+# FastAPI and web framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Pydantic for data validation
+pydantic==2.5.0
+
+# HTTP client for Claude API
+httpx==0.25.2
+
+# CORS middleware
+python-multipart==0.0.6
+
+# Core scientific computing (existing dependencies)
+numpy>=1.19.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+joblib>=1.0.0
+
+# Python standard library dependencies (no installation needed)
+# - pathlib (Python 3.4+)
+# - json (built-in)
+# - sys (built-in)
+# - os (built-in)
+# - typing (Python 3.5+)
+# - datetime (built-in)
+# - asyncio (Python 3.4+)
+
+# Development dependencies (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+black==23.11.0
+flake8==6.1.0
+
+# Production deployment (optional)
+gunicorn==21.2.0 

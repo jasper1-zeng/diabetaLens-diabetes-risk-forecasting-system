@@ -29,10 +29,10 @@ sys.path.append(str(project_root))
 
 # Import all required modules
 try:
-    from baseline_risk import calculate_baseline_risk
-    from activity_level_predictor import predict_time_series_activity_level
-    from diabetes_risk_predictor import predict_diabetes_risk_level
-    from future_steps_predictor import predict_future_steps
+    from baseline_risk.baseline_risk import calculate_baseline_risk
+    from activity_level_predictor.activity_level_predictor import predict_time_series_activity_level
+    from diabetes_risk_predictor.diabetes_risk_predictor import predict_diabetes_risk_level
+    from future_steps_predictor.future_steps_predictor import predict_future_steps
 except ImportError as e:
     print(f"❌ Import error: {e}")
     print("Please ensure all required modules are available in the scripts directory.")
