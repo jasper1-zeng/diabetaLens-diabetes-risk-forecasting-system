@@ -1,0 +1,50 @@
+{
+  "model_info": {
+    "name": "Random Forest",
+    "type": "RandomForestClassifier",
+    "version": "random_forest_20250714_170813",
+    "timestamp": "2025-07-14T17:08:13.298565",
+    "parameters": {
+      "bootstrap": true,
+      "ccp_alpha": 0.0,
+      "class_weight": null,
+      "criterion": "gini",
+      "max_depth": 5,
+      "max_features": "sqrt",
+      "max_leaf_nodes": null,
+      "max_samples": null,
+      "min_impurity_decrease": 0.0,
+      "min_samples_leaf": 4,
+      "min_samples_split": 10,
+      "min_weight_fraction_leaf": 0.0,
+      "monotonic_cst": null,
+      "n_estimators": 200,
+      "n_jobs": null,
+      "oob_score": false,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    }
+  },
+  "performance": {
+    "accuracy": 0.8820156910078455,
+    "auc_score": 0.8820748650330371,
+    "f1_score": 0.6535735380980507,
+    "sensitivity": 0.5342829550941575,
+    "specificity": 0.9735103544657604
+  },
+  "data_info": {
+    "features": [
+      "age",
+      "bmi",
+      "activity_high",
+      "activity_low",
+      "activity_moderate"
+    ],
+    "numerical_features": [
+      "age",
+      "bmi"
+    ],
+    "target": "at_risk_diabetes"
+  }
+}

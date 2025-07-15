@@ -1,0 +1,20 @@
+# Requirements for Diabetes Risk Predictor Module
+# DiabetaLens - Diabetes Risk Forecasting System
+
+# Core scientific computing libraries
+numpy>=1.19.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+joblib>=1.0.0
+
+# Python standard library dependencies (no installation needed)
+# - pathlib (Python 3.4+)
+# - json (built-in)
+# - sys (built-in)
+# - os (built-in)
+# - typing (Python 3.5+)
+
+# Internal dependencies (must be in project structure)
+# - scripts/baseline_risk/baseline_risk.py
+# - scripts/activity_level_predictor/activity_level_predictor.py
+# - models/optimized/ (pre-trained models) 
