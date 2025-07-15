@@ -24,7 +24,7 @@ class RiskPercentagesResponse(BaseModel):
     month_6_risk: float = Field(..., alias="6_month_risk")
     
     class Config:
-        allow_population_by_field_name = True
+        populate_by_name = True
 
 
 class AnalysisResponse(BaseModel):
@@ -61,7 +61,7 @@ class RiskAssessmentResponse(BaseModel):
     step_analysis: StepAnalysisResponse
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "patient_info": {
                     "age": 45,
@@ -132,7 +132,7 @@ class SingleRecommendationResponse(BaseModel):
     risk_assessment: Optional[RiskAssessmentResponse] = None
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "user_profile": {
                     "age": 45,
@@ -179,7 +179,7 @@ class ComprehensiveRecommendationResponse(BaseModel):
     risk_assessment: RiskAssessmentResponse
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "user_profile": {
                     "age": 45,
@@ -223,7 +223,7 @@ class HealthMetricsResponse(BaseModel):
     step_analysis: StepAnalysisResponse
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "age": 45,
                 "baseline_risk": 4.9,
@@ -255,7 +255,7 @@ class BatchProcessingResponse(BaseModel):
     processed_at: str
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "results": [
                     {
@@ -286,7 +286,7 @@ class ErrorResponse(BaseModel):
     request_id: Optional[str] = None
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "error": "Validation Error",
                 "detail": "BMI must be between 10.0 and 60.0",
@@ -306,7 +306,7 @@ class HealthStatusResponse(BaseModel):
     services: Dict[str, str]
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "status": "healthy",
                 "timestamp": "2024-01-15T10:30:00Z",

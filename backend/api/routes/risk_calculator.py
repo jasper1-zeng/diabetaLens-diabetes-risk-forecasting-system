@@ -9,6 +9,7 @@ from fastapi import APIRouter, HTTPException, BackgroundTasks
 from typing import List
 import sys
 from pathlib import Path
+from pydantic import ValidationError
 
 # Add backend to path
 sys.path.append(str(Path(__file__).parent.parent.parent))
@@ -54,6 +55,13 @@ async def assess_diabetes_risk(request: HealthDataRequest):
     **Returns:** Complete risk assessment with analysis and recommendations context.
     """
     try:
+        # Log incoming request for debugging
+        print(f"📥 Received risk assessment request:")
+        print(f"   Age: {request.age}")
+        print(f"   BMI: {request.bmi}")
+        print(f"   Step data length: {len(request.past_28_day_steps)}")
+        print(f"   Step data sample: {request.past_28_day_steps[:5]}...")
+        
         # Initialize risk calculator
         calculator = RiskCalculator()
         
@@ -64,11 +72,17 @@ async def assess_diabetes_risk(request: HealthDataRequest):
             past_28_day_steps=request.past_28_day_steps
         )
         
+        print(f"✅ Risk assessment completed successfully")
         return RiskAssessmentResponse(**result)
         
+    except ValidationError as e:
+        print(f"❌ Pydantic validation error: {str(e)}")
+        raise HTTPException(status_code=422, detail=f"Validation error: {str(e)}")
     except ValueError as e:
+        print(f"❌ Value error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        print(f"❌ Risk assessment error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Risk assessment failed: {str(e)}")
 
 
@@ -292,14 +306,4 @@ async def analyze_activity_level(step_data: List[int]):
         raise HTTPException(status_code=500, detail=f"Activity analysis failed: {str(e)}")
 
 
-# Error handlers specific to this router
-@router.exception_handler(ValueError)
-async def value_error_handler(request, exc):
-    """Handle validation errors"""
-    return create_error_response("Validation Error", str(exc))
-
-
-@router.exception_handler(Exception)  
-async def general_error_handler(request, exc):
-    """Handle general errors"""
-    return create_error_response("Risk Calculator Error", str(exc)) 
+# Error handlers are defined globally in main.py 

@@ -47,7 +47,7 @@ class HealthDataRequest(BaseModel):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "age": 45,
                 "bmi": 28.5,
@@ -64,9 +64,9 @@ class QuickRecommendationRequest(BaseModel):
     # User profile data
     age: int = Field(..., ge=1, le=120)
     bmi: float = Field(..., ge=10.0, le=60.0)
-    activity_level: str = Field(..., regex="^(low|moderate|high)$")
+    activity_level: str = Field(..., pattern="^(low|moderate|high)$")
     median_steps: int = Field(..., ge=0)
-    diabetes_risk_level: str = Field(..., regex="^(low-risk|medium-risk|high-risk)$")
+    diabetes_risk_level: str = Field(..., pattern="^(low-risk|medium-risk|high-risk)$")
     
     # Risk percentages
     risk_1_month: float = Field(..., ge=0.0, le=100.0)
@@ -76,12 +76,12 @@ class QuickRecommendationRequest(BaseModel):
     # Recommendation type
     recommendation_type: str = Field(
         "comprehensive",
-        regex="^(comprehensive|activity|risk_explanation)$",
+        pattern="^(comprehensive|activity|risk_explanation)$",
         description="Type of recommendation to generate"
     )
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "age": 45,
                 "bmi": 28.5,
@@ -103,7 +103,7 @@ class RecommendationTypeRequest(BaseModel):
     
     recommendation_type: str = Field(
         "comprehensive",
-        regex="^(comprehensive|activity|risk_explanation)$",
+        pattern="^(comprehensive|activity|risk_explanation)$",
         description="Type of recommendation to generate"
     )
     
@@ -132,7 +132,7 @@ class BatchHealthDataRequest(BaseModel):
     
     recommendation_type: str = Field(
         "comprehensive",
-        regex="^(comprehensive|activity|risk_explanation)$",
+        pattern="^(comprehensive|activity|risk_explanation)$",
         description="Type of recommendations if enabled"
     )
 
@@ -153,7 +153,7 @@ class HealthMetricsRequest(BaseModel):
         return v
     
     class Config:
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "age": 45,
                 "past_28_day_steps": [6500, 7200, 5800, 8100, 6000] * 5 + [6300, 6700, 6100]

@@ -330,14 +330,4 @@ async def verify_claude_available():
         )
 
 
-# Error handlers specific to this router
-@router.exception_handler(ClaudeAPIError)
-async def claude_error_handler(request, exc):
-    """Handle Claude API specific errors"""
-    return create_error_response("AI Service Error", str(exc))
-
-
-@router.exception_handler(RecommendationEngineError)
-async def recommendation_error_handler(request, exc):
-    """Handle recommendation engine errors"""
-    return create_error_response("Recommendation Error", str(exc)) 
+# Error handlers are defined globally in main.py 
