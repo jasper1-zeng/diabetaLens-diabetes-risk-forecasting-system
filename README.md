@@ -36,25 +36,50 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8+ 
+- Python 3.8+ or Conda/Miniconda
 - Node.js 16+
 - Claude API key (optional, for AI recommendations)
 
-### 1️⃣ Backend Setup
+### 1️⃣ Environment Setup
+
+**Option A: Using Conda (Recommended)**
 ```bash
+# Create and activate conda environment
+conda env create -f environment.yml
+conda activate da_interview
+```
+
+**Option B: Using Pip**
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
 # Install dependencies
 cd backend
 pip install -r requirements.txt
+```
 
-# Configure environment (optional)
-echo "CLAUDE_API_KEY=your_key_here" > .env
+### 2️⃣ LLM API Setup (Optional)
 
-# Start server
+To enable AI-powered recommendations, configure your Claude API key:
+
+```bash
+# Create .env file in the project root directory
+echo "CLAUDE_API_KEY=your_claude_api_key_here" > .env
+```
+
+**Note**: Without this setup, the system will work but AI recommendations will be disabled.
+
+### 3️⃣ Backend Setup
+```bash
+# Start backend server
+cd backend
 python api/main.py
 ```
 **Backend:** http://localhost:8000 | **Docs:** http://localhost:8000/docs
 
-### 2️⃣ Frontend Setup
+### 4️⃣ Frontend Setup
 ```bash
 # Install and start
 cd frontend
@@ -63,7 +88,7 @@ npm run dev
 ```
 **Frontend:** http://localhost:5173
 
-### 3️⃣ Test the System
+### 5️⃣ Test the System
 ```python
 import requests
 
