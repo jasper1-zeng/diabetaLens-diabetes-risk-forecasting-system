@@ -11,274 +11,178 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.2.2-blue.svg)](https://typescriptlang.org)
 [![Claude AI](https://img.shields.io/badge/Claude%20AI-3.5%20Sonnet-orange.svg)](https://anthropic.com)
 
+**✅ Production-Ready System | 🤖 AI-Powered Recommendations | 📊 88.2% ML Accuracy**
+
 </div>
 
-## 🚀 **System Status: FULLY OPERATIONAL** ✅
+---
+## 🌟 Overview
 
-**DiabetaLens** is a production-ready diabetes risk forecasting system that combines machine learning, time series analysis, and AI-powered recommendations to provide comprehensive health insights.
+**DiabetaLens** is a production-ready diabetes risk forecasting system that combines machine learning, time series analysis, and AI-powered recommendations to provide comprehensive health insights. Built with FastAPI, React, and Claude AI integration.
 
-### 🎯 **All Phases Complete**
+### 🎯 Key Features
 
-| Phase | Status | Description |
-|-------|--------|-------------|
-| **Phase 1** | ✅ **Complete** | ML Risk Calculator Pipeline (88.2% AUC) |
-| **Phase 2** | ✅ **Complete** | Claude AI Health Recommendations |
-| **Phase 3** | ✅ **Complete** | Full-Stack Frontend Application |
+| Feature | Description |
+|---------|-------------|
+| **🔮 Multi-Horizon Predictions** | 1, 3, and 6-month diabetes risk forecasts |
+| **🧠 Machine Learning** | Random Forest classifier with 88.2% AUC score |
+| **🤖 AI Recommendations** | Claude 3.5 Sonnet personalized health advice |
+| **📱 Modern UI** | React + TypeScript responsive web application |
+| **⚡ Fast API** | High-performance REST API with auto-documentation |
+| **📊 Evidence-Based** | Australian Bureau of Statistics 2022 baseline data |
 
 ---
 
-## 🌟 **Key Features**
-
-### 🏥 **Advanced Risk Assessment**
-- **Multi-horizon predictions**: 1, 3, and 6-month diabetes risk forecasts
-- **Evidence-based baselines**: Australian Bureau of Statistics 2022 data
-- **ML-powered classification**: Random Forest model with 88.2% AUC score
-- **Time series analysis**: 28-day activity pattern evaluation
-
-### 🤖 **AI-Powered Recommendations**
-- **Claude 3.5 Sonnet integration**: Personalized health advice generation
-- **Age-appropriate guidance**: Tailored exercise and lifestyle recommendations
-- **Risk-stratified advice**: Different strategies for low/medium/high-risk profiles
-- **Comprehensive analysis**: Activity, nutrition, and monitoring guidance
-
-### 🎨 **Modern User Interface**
-- **React + TypeScript frontend**: Professional, responsive design
-- **Real-time calculations**: Instant risk assessment and recommendations
-- **Interactive dashboards**: Beautiful data visualization and charts
-- **Mobile-friendly**: Optimized for all devices and screen sizes
-
-### 📊 **Professional API**
-- **FastAPI backend**: High-performance, auto-documented REST API
-- **Type-safe validation**: Pydantic models for all requests/responses
-- **Comprehensive documentation**: Interactive API docs at `/docs`
-- **CORS enabled**: Ready for frontend integration
-
----
-
-## 🚀 **Quick Start**
+## 🚀 Quick Start
 
 ### Prerequisites
+- Python 3.8+ 
+- Node.js 16+
+- Claude API key (optional, for AI recommendations)
 
-- Python 3.8+ with conda/pip
-- Node.js 16+ with npm
-- Claude API key (optional for recommendations)
-
-### 1. Backend Setup
-
+### 1️⃣ Backend Setup
 ```bash
-# Clone and navigate
-git clone <repository-url>
-cd diabetaLens-diabetes-risk-forecasting-system/backend
-
-# Install Python dependencies
+# Install dependencies
+cd backend
 pip install -r requirements.txt
 
-# Set up environment (optional - for AI recommendations)
+# Configure environment (optional)
 echo "CLAUDE_API_KEY=your_key_here" > .env
 
-# Start backend server
+# Start server
 python api/main.py
 ```
+**Backend:** http://localhost:8000 | **Docs:** http://localhost:8000/docs
 
-**Backend will be available at:** http://localhost:8000
-**API Documentation:** http://localhost:8000/docs
-
-### 2. Frontend Setup
-
+### 2️⃣ Frontend Setup
 ```bash
-# Navigate to frontend
-cd ../frontend
-
-# Install dependencies
+# Install and start
+cd frontend
 npm install
-
-# Start development server
 npm run dev
 ```
+**Frontend:** http://localhost:5173
 
-**Frontend will be available at:** http://localhost:5173
-
-### 3. Complete System Test
-
+### 3️⃣ Test the System
 ```python
-# Test the complete pipeline
 import requests
 
-# Risk assessment
 response = requests.post("http://localhost:8000/risk/assess", json={
     "age": 45,
     "bmi": 28.5,
     "past_28_day_steps": [6500, 7200, 5800, 8100, 6000] * 5 + [6300, 6700, 6100]
 })
 
-print(f"1-month risk: {response.json()['risk_percentages']['1_month_risk']:.1f}%")
-print(f"3-month risk: {response.json()['risk_percentages']['3_month_risk']:.1f}%")
-print(f"6-month risk: {response.json()['risk_percentages']['6_month_risk']:.1f}%")
+print(f"Risk: {response.json()['risk_percentages']['1_month_risk']:.1f}%")
 ```
 
 ---
 
-## 📋 **System Architecture**
+## 🏗️ Architecture
 
-### 🏗️ **Technology Stack**
-
+### Technology Stack
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     FRONTEND LAYER                         │
-│  React 18 + TypeScript + Vite + Tailwind CSS              │
-│  • Risk Assessment Forms                                   │
-│  • Interactive Dashboards                                  │
-│  • AI Recommendations Display                              │
-│  • Responsive Mobile Design                                │
-└─────────────────────────────────────────────────────────────┘
-                               │
-                         HTTP/REST API
-                               │
-┌─────────────────────────────────────────────────────────────┐
-│                     BACKEND LAYER                          │
-│  FastAPI + Pydantic + Uvicorn                             │
-│  • REST API Endpoints                                      │
-│  • Request/Response Validation                             │
-│  • CORS & Security                                         │
-│  • Auto-generated Documentation                            │
-└─────────────────────────────────────────────────────────────┘
-                               │
-                        Service Layer
-                               │
-┌─────────────────────────────────────────────────────────────┐
-│                   CORE SERVICES                            │
-│  • Risk Calculator Orchestration                           │
-│  • Claude AI Integration                                   │
-│  • Data Processing Pipeline                                │
-│  • Error Handling & Logging                                │
-└─────────────────────────────────────────────────────────────┘
-                               │
-                        ML Pipeline
-                               │
-┌─────────────────────────────────────────────────────────────┐
-│                   ML COMPONENTS                             │
-│  • Baseline Risk Calculator (ABS 2022)                     │
-│  • Activity Level Predictor (Time Series)                  │
-│  • Diabetes Risk Classifier (Random Forest)                │
-│  • Future Steps Predictor (Forecasting)                    │
-└─────────────────────────────────────────────────────────────┘
+┌─ Frontend ─────────────────────────────────────────┐
+│  React 18 + TypeScript + Vite + Tailwind CSS       │
+│  • Risk Assessment Forms • Interactive Dashboards  │
+│  • AI Recommendations • Responsive Design          │
+└────────────────────────────────────────────────────┘
+                        │ HTTP/REST API
+┌─ Backend ──────────────────────────────────────────┐
+│  FastAPI + Pydantic + Uvicorn                      │
+│  • REST Endpoints • Validation • Documentation     │
+└────────────────────────────────────────────────────┘
+                        │ Service Layer
+┌─ Core Services ─────────────────────────────────────┐
+│  • Risk Calculator • Claude AI • Data Processing    │
+└─────────────────────────────────────────────────────┘
+                        │ ML Pipeline
+┌─ ML Components ────────────────────────────────────┐
+│  • Baseline Risk • Activity Predictor              │
+│  • Diabetes Classifier • Future Forecasting        │
+└────────────────────────────────────────────────────┘
 ```
 
-### 🔄 **Risk Assessment Workflow**
-
-```mermaid
-graph TD
-    A[User Input: Age, BMI, 28-day Steps] --> B{Age < 30?}
-    
-    B -->|Yes| C[Use Baseline Risk Only]
-    C --> M[Output: Same Risk % for 1/3/6 months]
-    
-    B -->|No| D[Calculate Activity Level]
-    D --> E[ML Risk Classification]
-    E --> F{Risk Level?}
-    
-    F -->|Low Risk| G[Use Baseline Risk]
-    G --> M
-    
-    F -->|Medium/High Risk| H[Predict Future Steps]
-    H --> I[Calculate Risk Adjustments]
-    I --> J[Apply Sedentary Day Penalties]
-    J --> K[Generate 1/3/6 Month Forecasts]
-    K --> M
-    
-    M --> N[Claude AI Recommendations]
-    N --> O[Complete Assessment Report]
-```
+### Risk Assessment Workflow
+1. **Input Validation**: Age, BMI, 28-day step history
+2. **Baseline Calculation**: Age-based diabetes prevalence (ABS 2022)
+3. **Activity Analysis**: Time series pattern recognition
+4. **ML Classification**: Random Forest risk prediction
+5. **Future Forecasting**: Multi-horizon risk projections
+6. **AI Recommendations**: Claude-generated personalized advice
 
 ---
 
-## 🎯 **API Endpoints**
+## 📡 API Reference
 
-### Risk Assessment
+### Core Endpoints
+
+#### Risk Assessment
 ```http
 POST /risk/assess
-Content-Type: application/json
-
 {
   "age": 45,
   "bmi": 28.5,
-  "past_28_day_steps": [6500, 7200, 5800, ...]
+  "past_28_day_steps": [6500, 7200, ...]
 }
 ```
 
-### AI Recommendations
+#### AI Recommendations
 ```http
 POST /recommendations/generate
-Content-Type: application/json
-
 {
   "age": 45,
   "bmi": 28.5,
   "activity_level": "moderate",
   "diabetes_risk_level": "low-risk",
-  "risk_1_month": 5.2,
-  "risk_3_month": 5.8,
-  "risk_6_month": 6.4
+  "risk_1_month": 5.2
 }
 ```
 
-### Health Check
+#### Health Check
 ```http
 GET /health
 ```
 
-**Full API documentation available at:** http://localhost:8000/docs
+**Complete API documentation:** http://localhost:8000/docs
 
 ---
 
-## 🔬 **Clinical Accuracy & Validation**
+## 📊 Clinical Validation
 
-### 📊 **Model Performance**
-- **Random Forest Classifier**: 88.2% AUC score
-- **Training Data**: Australian diabetes datasets + wearable health data
-- **Validation**: Cross-validated performance on holdout test sets
-- **Baseline Data**: Australian Bureau of Statistics 2022 diabetes prevalence
+### Model Performance
+- **Accuracy**: 88.2% AUC Random Forest classifier
+- **Data Sources**: Australian diabetes datasets + wearable health data
+- **Baseline**: Australian Bureau of Statistics 2022 prevalence data
+- **Validation**: Cross-validated on holdout test sets
 
-### 🎯 **Risk Calculation Methods**
-
-1. **Age-Based Baseline**: Evidence-based risk percentages by age group
-2. **Activity Analysis**: Statistical analysis of 28-day step patterns
+### Risk Calculation Methodology
+1. **Age-Based Baseline**: Evidence-based risk by demographic
+2. **Activity Analysis**: 28-day step pattern evaluation
 3. **ML Classification**: Multi-feature diabetes risk prediction
-4. **Time Series Forecasting**: Future activity level predictions
-5. **Risk Adjustment**: Sedentary behavior penalty calculations
+4. **Temporal Forecasting**: Future activity and risk projections
+5. **Behavioral Adjustments**: Sedentary penalty calculations
 
 ---
 
-## 💡 **Usage Examples**
+## 💡 Usage Examples
 
-### Example 1: Low-Risk Young Adult
+### Low-Risk Profile
 ```json
 {
-  "input": {
-    "age": 25,
-    "bmi": 22.0,
-    "daily_steps_avg": 8500
-  },
-  "output": {
+  "input": { "age": 25, "bmi": 22.0, "avg_steps": 8500 },
+  "output": { 
     "risk_1_month": 1.2,
-    "risk_3_month": 1.2,
-    "risk_6_month": 1.2,
     "recommendation": "Maintain excellent activity levels..."
   }
 }
 ```
 
-### Example 2: Moderate-Risk Middle-Aged Adult
+### Moderate-Risk Profile
 ```json
 {
-  "input": {
-    "age": 45,
-    "bmi": 28.5,
-    "daily_steps_avg": 5200
-  },
-  "output": {
-    "risk_1_month": 5.2,
-    "risk_3_month": 6.1,
+  "input": { "age": 45, "bmi": 28.5, "avg_steps": 5200 },
+  "output": { 
     "risk_6_month": 7.3,
     "recommendation": "Increase daily activity to 7,000+ steps..."
   }
@@ -287,125 +191,111 @@ GET /health
 
 ---
 
-## 🚀 **Deployment**
+## 🚀 Deployment
 
-### Production Deployment
-
+### Production
 ```bash
-# Backend (FastAPI)
-pip install -r requirements.txt
+# Backend
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 
-# Frontend (React)
-npm run build
-npm run preview
-```
-
-### Docker Deployment
-
-```dockerfile
-# Coming soon: Docker configurations for easy deployment
+# Frontend
+npm run build && npm run preview
 ```
 
 ### Cloud Platforms
-- **Railway**: Backend API deployment
-- **Vercel**: Frontend static deployment
-- **AWS/GCP**: Full-stack deployment options
+- **Backend**: Railway, AWS, GCP
+- **Frontend**: Vercel, Netlify
+- **Database**: PostgreSQL, MongoDB Atlas
 
 ---
 
-## 🧪 **Testing**
+## 🧪 Testing
 
-### Backend Testing
 ```bash
-cd backend
-python -m pytest tests/
-```
+# Backend tests
+cd backend && python -m pytest tests/
 
-### Frontend Testing
-```bash
-cd frontend
-npm run test
-```
+# Frontend tests
+cd frontend && npm run test
 
-### Integration Testing
-```bash
-# Test complete workflow
+# Integration test
 python backend/demo_complete_system.py
 ```
 
 ---
 
-## 📚 **Documentation**
+## 📚 Documentation
 
-### Technical Documentation
-- **[API Reference](http://localhost:8000/docs)** - Interactive API documentation
-- **[Risk Calculator Guide](scripts/risk_calculator/README.md)** - ML pipeline details
-- **[Claude AI Integration](backend/ai/README.md)** - AI recommendation system
-
-### User Guides
-- **Frontend Usage**: Comprehensive user interface guide
-- **API Integration**: Developer integration examples
-- **Health Recommendations**: Understanding AI-generated advice
+| Resource | Description |
+|----------|-------------|
+| **[API Reference](http://localhost:8000/docs)** | Interactive API documentation |
+| **[ML Pipeline](scripts/risk_calculator/README.md)** | Risk calculation details |
+| **[AI Integration](backend/ai/)** | Claude recommendation system |
+| **[Setup Guide](SETUP_PHASE2.md)** | Detailed installation instructions |
 
 ---
 
-## 🤝 **Contributing**
+## 🤝 Contributing
 
-DiabetaLens is ready for community contributions! Priority areas:
-
-### 🎯 **High-Priority Enhancements**
-- [ ] Enhanced mobile UI/UX improvements
-- [ ] Additional ML model integrations
-- [ ] Extended health metrics support
-- [ ] Advanced data visualization options
-
-### 🔧 **Technical Improvements**
+### Priority Areas
+- [ ] Enhanced mobile UI/UX
+- [ ] Additional ML models
+- [ ] Extended health metrics
 - [ ] Docker containerization
-- [ ] Comprehensive test coverage
-- [ ] Performance optimizations
-- [ ] Security hardening
+- [ ] Comprehensive testing
 
-### 📊 **Data & Research**
-- [ ] Additional dataset integration
-- [ ] Model accuracy improvements
-- [ ] International diabetes statistics
-- [ ] Clinical validation studies
+### Development Setup
+```bash
+# Fork repository
+git clone <your-fork>
 
----
+# Setup development environment
+cd diabetaLens-diabetes-risk-forecasting-system
+pip install -r backend/requirements.txt
+cd frontend && npm install
 
-## 📄 **License & Ethics**
-
-### Data Sources
-- **Australian Bureau of Statistics**: Diabetes prevalence data (2022)
-- **Wearable Health Datasets**: Activity pattern analysis
-- **ML Training Data**: Anonymized health metrics
-
-### Ethical Considerations
-- **Not Medical Advice**: Educational and informational purposes only
-- **Privacy First**: No personal health data storage
-- **Transparency**: Open-source methodology and calculations
-- **Clinical Disclaimer**: Always consult healthcare professionals
+# Run development servers
+python backend/api/main.py  # Terminal 1
+npm run dev                 # Terminal 2 (from frontend/)
+```
 
 ---
 
-## 🏆 **Acknowledgments**
+## ⚖️ Important Disclaimers
 
-- **Australian Bureau of Statistics** for comprehensive diabetes prevalence data
-- **Anthropic Claude AI** for advanced natural language health recommendations
-- **Open Source Community** for ML libraries and frameworks
-- **Healthcare Research Community** for evidence-based risk assessment methodologies
+> **🚨 Medical Disclaimer**: This system is for educational and informational purposes only. It is not intended as a substitute for professional medical advice, diagnosis, or treatment. Always consult qualified healthcare professionals for medical decisions.
+
+### Data & Privacy
+- **No Data Storage**: Personal health information is not stored
+- **Open Source**: Transparent methodology and calculations
+- **Evidence-Based**: Uses peer-reviewed research and official statistics
+
+### Ethical AI Use
+- **Bias Awareness**: Models trained on diverse datasets
+- **Transparency**: Clear explanation of risk calculations
+- **Human Oversight**: AI recommendations complement, not replace, medical advice
+
+---
+
+## 🏆 Acknowledgments
+
+- **Australian Bureau of Statistics** - Diabetes prevalence data (2022)
+- **Anthropic Claude AI** - Natural language health recommendations
+- **Open Source Community** - ML libraries and frameworks
+- **Healthcare Research Community** - Evidence-based methodologies
 
 ---
 
 <div align="center">
 
-**✅ DiabetaLens: Complete AI-Powered Diabetes Risk Forecasting System**
+**🩺 DiabetaLens - Complete AI-Powered Health Assessment Platform**
 
-*Ready for diabetes risk assessment and personalized health recommendations* 🩺✨
+*Ready for production deployment and clinical integration*
 
 [![Backend Status](https://img.shields.io/badge/Backend-Operational-green.svg)](http://localhost:8000)
 [![Frontend Status](https://img.shields.io/badge/Frontend-Operational-green.svg)](http://localhost:5173)
 [![Claude AI](https://img.shields.io/badge/Claude%20AI-Integrated-orange.svg)](https://anthropic.com)
+
+**[📖 Documentation](http://localhost:8000/docs) • [🚀 Quick Start](#-quick-start) • [🤝 Contributing](#-contributing)**
 
 </div>
